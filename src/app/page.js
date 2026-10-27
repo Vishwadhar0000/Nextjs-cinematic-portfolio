@@ -1,85 +1,26 @@
-"use client";
-import { useEffect, useRef } from "react";
-import Lenis from "lenis";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
-
-import dynamic from "next/dynamic";
-import Cursor from "../components/Cursor";
-import Navbar from "../components/Navbar";
-const VideoScrub = dynamic(() => import("../components/VideoScrub"), { ssr: false });
-import Hero from "../components/Hero";
-import About from "../components/About";
-import Work from "../components/Work";
-import Contact from "../components/Contact";
-import Footer from "../components/Footer";
-import SeoContent from "../components/SeoContent";
-
-export default function Home() {
-  const blurWrapRef = useRef(null);
-  const footerRef   = useRef(null);
-
-  useEffect(() => {
-    const lenis = new Lenis({
-      lerp: 0.1, // More responsive, less lag
-      smoothWheel: true,
-      wheelMultiplier: 1, // Normal scroll speed
-    });
-
-    lenis.on("scroll", () => {
-      ScrollTrigger.update();
-      if (blurWrapRef.current && footerRef.current) {
-        const footerTop = footerRef.current.getBoundingClientRect().top;
-        const vh = window.innerHeight;
-        // opacity = 1 while footer is below viewport, fades as footer enters
-        const opacity = footerTop >= vh ? 1 : Math.max(0, footerTop / vh);
-        blurWrapRef.current.style.opacity = opacity;
-      }
-
-    });
-
-    const tick = (time) => { lenis.raf(time * 1000); };
-    gsap.ticker.add(tick);
-    gsap.ticker.lagSmoothing(0);
-
-    return () => {
-      lenis.destroy();
-      gsap.ticker.remove(tick);
-    };
-  }, []);
-
-  return (
-    <main>
-      {/* SEO-crawlable structured content (visually hidden) - Forced HMR refresh */}
-      <SeoContent />
-
-      {/* grain */}
-      <div className="grain-overlay" />
-
-      {/* difference cursor */}
-      <Cursor />
-
-      {/* sticky scrubbed video — lives behind everything */}
-      <VideoScrub />
-
-      {/* scroll progress indicator */}
-
-      {/* fixed nav */}
-      <Navbar />
-
-      {/* bottom blur — fixed to viewport, fades when footer arrives */}
-      <div ref={blurWrapRef} className="bottom-blur" />
-
-      {/* scrollable sections */}
-      <div className="relative z-10">
-        <Hero />
-        <About />
-        <Work />
-        <Contact />
-        <div ref={footerRef}><Footer /></div>
-      </div>
-    </main>
-  );
-}
+export const projectsData = [
+  {
+    title: "Graph-Based Fake News Detection System",
+    category: "Graph Neural Networks / NLP",
+    description: "Applied GCN pipeline evaluating news credibility via inter-document graphs. Engineered dense adjacency matrices via cosine similarity (>0.3) over 500-D TF-IDF vectors, using a 2-layer GCNConv network with dropout (p=0.5) to achieve 91.20% test accuracy and a 0.91 Macro F1-score across 1,000 articles.",
+    tech: ["PyTorch Geometric", "NetworkX", "TF-IDF", "Scikit-learn", "Python"],
+    github: "https://github.com/Vishwadhar0000",
+    demo: "#"
+  },
+  {
+    title: "Production BERT FAQ Conversational Microservice",
+    category: "NLP / Microservices / Cloud",
+    description: "Asynchronous NLP microservice using BERT embeddings and FastAPI for automated e-commerce query resolution. Utilizes dense vector matching across structured knowledge bases, Telegram Bot API webhooks, and Render cloud deployments (render.yaml).",
+    tech: ["Python", "BERT", "FastAPI", "Uvicorn", "Telegram API", "Render"],
+    github: "https://github.com/Vishwadhar0000",
+    demo: "#"
+  },
+  {
+    title: "Mobile Click-Fraud Anomaly Detector",
+    category: "Machine Learning / Edge AI",
+    description: "Client-side anomaly detection system identifying bot clicks and touch injection attacks. Extracts behavioral metrics (touch coordinate variance, sequence intervals) and benchmarks lightweight tree-based classifiers for battery-efficient offline inference.",
+    tech: ["Python", "Scikit-learn", "Feature Engineering"],
+    github: "https://github.com/Vishwadhar0000",
+    demo: "#"
+  }
+];
